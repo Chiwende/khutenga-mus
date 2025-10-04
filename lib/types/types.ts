@@ -51,3 +51,12 @@ export interface Subscription {
   trial_start?: string;
   trial_end?: string;
 }
+
+export interface Song {
+  id: string;
+  user_id: string;
+  author: string;
+  title: string;
+  image_path: string;
+  song_path: string;
+}
