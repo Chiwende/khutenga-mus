@@ -5,8 +5,14 @@ import { TbPlaylist } from 'react-icons/tb';
 import useAuthModal from '@/hooks/useAuthModal';
 import useUploadModal from '@/hooks/useUploadModal';
 import { useUser } from '@/hooks/useUser';
+import { Song } from '@/lib/types/types';
+import { LuRadioTower } from 'react-icons/lu';
 
-const Library = () => {
+interface LibraryProps {
+  songs: Song[];
+}
+
+const Library: React.FC<LibraryProps> = ({ songs }) => {
   const authModal = useAuthModal();
   const uploadModal = useUploadModal();
   const user = useUser();
@@ -32,7 +38,20 @@ const Library = () => {
           className='text-neutral-400 cursor-pointer hover:text-white transition'
         />
       </div>
-      <div className='flex flex-col gap-y-2 mt-4 px-3'>List of Songs</div>
+      <div className='flex flex-col gap-y-2 mt-4 px-3'>
+        {songs.map((song) => (
+          <div key={song.id} className='flex items-center gap-x-2'>
+            <p className='text-md font-medium'>{song.title}</p>
+          </div>
+        ))}
+      </div>
+      {/* Radio Station Section */}
+      <div className='flex items-center justify-between px-2 pt-4'>
+        <div className='inline-flex items-center gap-x-2'>
+          <LuRadioTower size={26} className='text-neutral-400' />
+          <p className='text-md font-medium text-neutral-400'>Radio Stations</p>
+        </div>
+      </div>
     </div>
   );
 };
