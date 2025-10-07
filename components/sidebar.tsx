@@ -33,6 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children, songs }) => {
     ],
     [pathname]
   );
+  console.log('songs in sidebar', songs);
   return (
     <div className='h-screen flex'>
       <div className='hidden md:flex flex-col gap-y-2 bg-black h-full w-[300px] p-2'>

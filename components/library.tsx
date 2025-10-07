@@ -7,6 +7,7 @@ import useUploadModal from '@/hooks/useUploadModal';
 import { useUser } from '@/hooks/useUser';
 import { Song } from '@/lib/types/types';
 import { LuRadioTower } from 'react-icons/lu';
+import MediaItem from './media-item';
 
 interface LibraryProps {
   songs: Song[];
@@ -25,6 +26,7 @@ const Library: React.FC<LibraryProps> = ({ songs }) => {
 
     return uploadModal.onOpen();
   };
+
   return (
     <div className='flex flex-col gap-y-2 px-3'>
       <div className='flex items-center justify-between px-2 pt-4'>
@@ -41,7 +43,7 @@ const Library: React.FC<LibraryProps> = ({ songs }) => {
       <div className='flex flex-col gap-y-2 mt-4 px-3'>
         {songs.map((song) => (
           <div key={song.id} className='flex items-center gap-x-2'>
-            <p className='text-md font-medium'>{song.title}</p>
+            <MediaItem onClick={() => {}} key={song.id} data={song} />
           </div>
         ))}
       </div>

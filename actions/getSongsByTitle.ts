@@ -1,8 +1,9 @@
 import { Song } from '@/lib/types/types';
 import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
+import getSongs from './getSongs';
 
-const getSongsByUserId = async (): Promise<Song[]> => {
+const getSongsByTitle = async (title: string): Promise<Song[]> => {
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,9 +17,15 @@ const getSongsByUserId = async (): Promise<Song[]> => {
     }
   );
 
+  if (!title) {
+    const allSongs = await getSongs();
+    return allSongs;
+  }
+
   const { data, error } = await supabase
     .from('songs')
     .select('*')
+    .ilike('title', `%${title}%`)
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -28,4 +35,4 @@ const getSongsByUserId = async (): Promise<Song[]> => {
   return (data as Song[]) || [];
 };
 
-export default getSongsByUserId;
+export default getSongsByTitle;
