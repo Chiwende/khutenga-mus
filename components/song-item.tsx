@@ -7,7 +7,7 @@ import { Play } from 'next/font/google';
 import PlayButton from './play-button';
 
 interface SongItemProps {
-  onClick: (id: string) => void;
+  onClick: (id: number) => void;
   data: Song;
 }
 

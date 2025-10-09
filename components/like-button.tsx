@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 
 interface LikeButtonProps {
-  songId: string;
+  songId: number;
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({ songId }) => {
