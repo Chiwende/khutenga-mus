@@ -2,7 +2,7 @@
 
 import { Database } from '@/lib/db/supabase';
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createBrowserClient } from '@supabase/ssr';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
 
 interface SuperBaseProviderProps {
@@ -11,7 +11,10 @@ interface SuperBaseProviderProps {
 
 const SuperBaseProvider: React.FC<SuperBaseProviderProps> = ({ children }) => {
   const [supabaseClient] = useState(() =>
-    createClientComponentClient<Database>()
+    createBrowserClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
   );
 
   return (

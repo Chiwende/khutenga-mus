@@ -1,69 +1,26 @@
 import { Song } from '@/lib/types/types';
-import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
+import { getServerSession } from '@/lib/auth/session';
 
 const getLikedSongs = async (): Promise<Song[]> => {
   try {
-    const cookieStore = await cookies();
+    const { supabase, user, error } = await getServerSession();
 
-    // Create Supabase client with proper cookie handling
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get: (name: string) => {
-            const cookie = cookieStore.get(name);
-            return cookie?.value;
-          },
-          set: (name: string, value: string, options: any) => {
-            try {
-              cookieStore.set({ name, value, ...options });
-            } catch (error) {
-              // Ignore cookie setting errors in server components
-            }
-          },
-          remove: (name: string, options: any) => {
-            try {
-              cookieStore.set({ name, value: '', ...options });
-            } catch (error) {
-              // Ignore cookie removal errors in server components
-            }
-          },
-        },
-      }
-    );
+    console.log('Session result:', {
+      hasUser: !!user,
+      userId: user?.id,
+      userEmail: user?.email,
+      error: error,
+    });
 
-    // Try to get the user session first
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    console.log('Session check:', { session: !!session, error: sessionError });
-
-    // If session fails, try getUser
-    if (sessionError || !session) {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      console.log('User check:', { user: !!user, error: userError });
-
-      if (userError || !user?.id) {
-        console.log('No authenticated user found');
-        return [];
-      }
-
-      console.log('Authenticated user found via getUser:', user.id);
-      return await fetchLikedSongs(supabase, user.id);
+    if (error || !user?.id) {
+      console.log('❌ No authenticated user found');
+      console.error('Error in getLikedSongs:', error);
+      return [];
     }
 
-    console.log('Authenticated user found via session:', session.user.id);
-    return await fetchLikedSongs(supabase, session.user.id);
+    return await fetchLikedSongs(supabase, user.id);
   } catch (error) {
-    console.error('Error in getLikedSongs:', error);
+    console.error('❌ Error in getLikedSongs:', error);
     return [];
   }
 };
@@ -79,20 +36,24 @@ const fetchLikedSongs = async (
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Error fetching liked songs:', error);
+    console.error('❌ Error fetching liked songs:', error);
     return [];
   }
 
   if (!data) {
+    console.log('⚠️ No data returned from database');
     return [];
   }
 
+  console.log('📊 Raw liked songs data:', data);
+
   // Filter out any items where songs is null and map to Song type
-  return data
+  const filteredSongs = data
     .filter((item: any) => item.songs !== null)
     .map((item: any) => ({
       ...item.songs,
     })) as Song[];
+  return filteredSongs;
 };
 
 export default getLikedSongs;

@@ -6,8 +6,10 @@ import LikedContent from './components/liked-content';
 export const revalidate = 0;
 
 const Liked = async () => {
+  console.log('=== LIKED PAGE DEBUG ===');
   const songs = await getLikedSongs();
-  console.log('liked songs', songs);
+  console.log('liked songs result:', songs);
+  console.log('songs length:', songs?.length || 0);
   return (
     <div className='bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow'>
       <Header>

@@ -1,5 +1,7 @@
 'use client';
 
+import LikeButton from '@/components/like-button';
+import MediaItem from '@/components/media-item';
 import { useUser } from '@/hooks/useUser';
 import { Song } from '@/lib/types/types';
 
@@ -13,7 +15,7 @@ interface LikedContentProps {
 const LikedContent: React.FC<LikedContentProps> = ({
   songs,
 }: {
-  songs: any[];
+  songs: Song[];
 }) => {
   const router = useRouter();
   const { isLoading, user } = useUser();
@@ -31,7 +33,21 @@ const LikedContent: React.FC<LikedContentProps> = ({
       </div>
     );
   }
-  return <>Liked Content</>;
+
+  const handleClick = (id: number) => {};
+
+  return (
+    <div className='flex flex-col gap-y-2 w-full p-6'>
+      {songs.map((song) => (
+        <div key={song.id} className='flex items-center gap-x-4 w-full'>
+          <div className='flex-1'>
+            <MediaItem data={song} onClick={handleClick} />
+          </div>
+          <LikeButton songId={song.id} />
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default LikedContent;

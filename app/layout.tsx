@@ -6,7 +6,9 @@ import SuperBaseProvider from '@/provider/SuperbaseProvider';
 import UserProvider from '@/provider/UserProvider';
 import ModalProvider from '@/provider/ModalProvider';
 import ToasterProvider from '@/provider/ToasterProvider';
+import { SessionFeedProvider } from '@/provider/SessionFeedProvider';
 import getSongsByUserId from '@/actions/getSongsByUserId';
+import Player from '@/components/player';
 
 const font = Figtree({
   subsets: ['latin'],
@@ -32,10 +34,13 @@ export default async function RootLayout({
       <body className={font.className}>
         <ToasterProvider />
         <SuperBaseProvider>
-          <UserProvider>
-            <ModalProvider />
-            <Sidebar songs={userSongs}>{children}</Sidebar>
-          </UserProvider>
+          <SessionFeedProvider>
+            <UserProvider>
+              <ModalProvider />
+              <Sidebar songs={userSongs}>{children}</Sidebar>
+              <Player />
+            </UserProvider>
+          </SessionFeedProvider>
         </SuperBaseProvider>
       </body>
     </html>

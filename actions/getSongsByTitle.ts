@@ -1,21 +1,9 @@
 import { Song } from '@/lib/types/types';
-import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
+import { getServerSession } from '@/lib/auth/session';
 import getSongs from './getSongs';
 
 const getSongsByTitle = async (title: string): Promise<Song[]> => {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get: (name: string) => cookieStore.get(name)?.value,
-        set: () => {},
-        remove: () => {},
-      },
-    }
-  );
+  const { supabase } = await getServerSession();
 
   if (!title) {
     const allSongs = await getSongs();
