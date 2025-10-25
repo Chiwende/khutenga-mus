@@ -21,7 +21,9 @@ const Slider: React.FC<SliderProps> = ({ value = 1, onChange }) => {
       step={0.1}
       aria-label='Volume'
     >
-      <RadixSlider.Track className='bg-neutral-600 relative grow rounded-full h-[3px] w-full'></RadixSlider.Track>
+      <RadixSlider.Track className='bg-neutral-600 relative grow rounded-full h-[3px] w-full'>
+        <RadixSlider.Range className='absolute bg-white rounded-full h-full' />
+      </RadixSlider.Track>
     </RadixSlider.Root>
   );
 };

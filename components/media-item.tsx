@@ -4,14 +4,14 @@ import Image from 'next/image';
 
 interface MediaItemProps {
   data: Song;
-  onClick: (id: number) => void;
+  onClick: (id: string) => void;
 }
 
 const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
   const image_url = useLoadImage(data);
   const handleClick = () => {
     if (onClick) {
-      return onClick(data.id);
+      return onClick(data.id.toString());
     }
 
     // TODO:: Turn on default player

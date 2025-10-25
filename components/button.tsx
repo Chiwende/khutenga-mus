@@ -1,27 +1,32 @@
-import { forwardRef } from 'react';
+import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
 import { twMerge } from 'tailwind-merge';
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  asChild?: boolean;
+}
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, children, disabled, type = 'button', ...props }, ref) => {
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : 'button';
+
     return (
-      <button
-        type={type}
+      <Comp
+        ref={ref}
         className={twMerge(
-          `w-full rounded-full bg-blue-500 border border-transparent px-3 py-3 disabled:cursor-not-allowed disabled:opacity-50 text-black font-bold hover:opacity-75 transition`,
+          `inline-flex items-center justify-center rounded-full 
+           bg-blue-500 px-3 py-3 font-bold text-black 
+           border border-transparent transition hover:opacity-75 
+           disabled:cursor-not-allowed disabled:opacity-50`,
           className
         )}
-        disabled={disabled}
-        ref={ref}
         {...props}
-      >
-        {children}
-      </button>
+      />
     );
   }
 );
 
 Button.displayName = 'Button';
 
-export default Button;
+export { Button };

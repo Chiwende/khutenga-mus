@@ -3,7 +3,6 @@ import React from 'react';
 import Image from 'next/image';
 import useLoadImage from '@/hooks/useLoadImage';
 import { Song } from '@/lib/types/types';
-import { Play } from 'next/font/google';
 import PlayButton from './play-button';
 
 interface SongItemProps {

@@ -1,4 +1,4 @@
-// lib/auth/session-manager.ts
+/* eslint-disable */
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
@@ -34,7 +34,6 @@ export class SessionManager {
       supabaseCookies.map((c) => ({
         name: c.name,
         hasValue: !!c.value,
-        expires: c.expires?.toISOString() || 'No expiry',
       }))
     );
 

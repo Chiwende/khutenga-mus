@@ -4,7 +4,7 @@ import { BiSearch } from 'react-icons/bi';
 import { HiHome } from 'react-icons/hi';
 import { RxCaretLeft, RxCaretRight } from 'react-icons/rx';
 import { twMerge } from 'tailwind-merge';
-import Button from './button';
+import { Button } from './button';
 import useAuthModal from '@/hooks/useAuthModal';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useUser } from '@/hooks/useUser';
@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
           </button>
         </div>
         {user ? (
-          <div className='flex gap-x-4 items-center'>
+          <div className='flex gap-x-4 items-center max-w-lg'>
             <Button
               className='bg-white px-6 py-2 flex-1'
               onClick={handleLogout}
@@ -67,7 +67,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
           </div>
         ) : (
           <>
-            <div className='flex md:hidden gap-x-2 items-center'>
+            <div className='flex md:hidden gap-x-2 items-center w-full'>
               <button className='rounded-full bg-white p-2 flex items-center justify-center hover:opacity-75 transition'>
                 <HiHome size={20} className='text-black' />
               </button>
@@ -75,16 +75,16 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                 <BiSearch size={20} className='text-black' />
               </button>
             </div>
-            <div className='flex items-center gap-x-4'>
+            <div className='flex items-center gap-x-4 w-full'>
               <Button
                 onClick={authModal.onOpen}
-                className='bg-transparent text-neutral-500 font-medium px-6 flex-1'
+                className='bg-transparent text-neutral-500 font-medium px-6 py-3 flex-1'
               >
                 Sign Up
               </Button>
               <Button
                 onClick={authModal.onOpen}
-                className='bg-white text-neutral-500 font-medium px-6 flex-1'
+                className='bg-white text-neutral-500 font-medium px-6 py-3 flex-1'
               >
                 Login
               </Button>

@@ -1,17 +1,13 @@
 import { Song } from '@/lib/types/types';
 import MediaItem from './media-item';
 import LikeButton from './like-button';
-import {
-  BsPauseFill,
-  BsPlayFill,
-  BsVolumeMute,
-  BsVolumeUp,
-} from 'react-icons/bs';
+import { BsPauseFill, BsPlayFill } from 'react-icons/bs';
 import { AiFillStepBackward, AiFillStepForward } from 'react-icons/ai';
 import { HiSpeakerWave, HiSpeakerXMark } from 'react-icons/hi2';
 import Slider from './slider';
 import usePlayer from '@/hooks/usePlayerHook';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import useSound from 'use-sound';
 
 interface PlayerContentProps {
   key: string;
@@ -48,8 +44,38 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     player.setId(previousSong);
   };
 
+  const [play, { pause, sound }] = useSound(songUrl, {
+    volume: volume,
+    onplay: () => setIsPlaying(true),
+    onpause: () => setIsPlaying(false),
+    onend: () => () => {
+      setIsPlaying(false);
+      onPlayNext();
+    },
+    format: ['mp3'],
+  });
+
+  useEffect(() => {
+    sound?.play();
+    return () => {
+      sound?.unload();
+    };
+  }, [sound]);
+
+  const handlePlay = () => {
+    if (!isPlaying) {
+      play();
+    } else {
+      pause();
+    }
+  };
+
+  const toggleMute = () => {
+    setVolume(volume === 0 ? 1 : 0);
+  };
+
   return (
-    <div className='grid grid-cols-2 md:grid-cols-3 h-full'>
+    <div className='grid grid-cols-2 md:grid-cols-3 h-full w-full'>
       <div className='flex w-full justify-start'>
         <div className='flex items-center gap-x-4'>
           <MediaItem data={song} onClick={() => {}} />
@@ -70,7 +96,10 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
           size={30}
           className='text-neutral-400 cursor-pointer hover:text-white transition'
         />
-        <div className='flex items-center justify-center h-10 w-10 rounded-full bg-white p-1 cursor-pointer'>
+        <div
+          onClick={handlePlay}
+          className='flex items-center justify-center h-10 w-10 rounded-full bg-white p-1 cursor-pointer'
+        >
           <Icon size={30} className='text-black' />
         </div>
         <AiFillStepForward
@@ -82,11 +111,11 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
       <div className='hidden md:flex justify-end pr-2'>
         <div className='flex items-center gap-x-2 w-[120px]'>
           <VolumeIcon
-            onClick={() => {}}
+            onClick={toggleMute}
             size={34}
             className='text-neutral-400 cursor-pointer hover:text-white transition'
           />
-          {/* <Slider /> */}
+          <Slider value={volume} onChange={setVolume} />
         </div>
       </div>
     </div>

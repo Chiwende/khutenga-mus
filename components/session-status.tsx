@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useSessionFeedContext } from '@/provider/SessionFeedProvider';
-import Button from '@/components/button';
+import { Button } from './button';
 
 interface SessionStatusProps {
   showDetails?: boolean;

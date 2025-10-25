@@ -5,7 +5,7 @@ import useUploadModal from '@/hooks/useUploadModal';
 import { useState } from 'react';
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
 import Input from './input';
-import Button from './button';
+import { Button } from './button';
 import { toast } from 'react-hot-toast';
 import { useUser } from '@/hooks/useUser';
 import uniqid from 'uniqid';
