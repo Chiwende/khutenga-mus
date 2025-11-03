@@ -15,8 +15,17 @@ const font = Figtree({
 });
 
 export const metadata: Metadata = {
-  title: 'Khutenga Music',
+  title: {
+    default: 'Khutenga Music',
+    template: '%s | Khutenga Music',
+  },
   description: 'Listen to music',
+  applicationName: 'Khutenga Music',
+  icons: {
+    icon: [{ url: '/Kmusic.png', type: 'image/png' }],
+    apple: [{ url: '/Kmusic.png' }],
+    shortcut: ['/Kmusic.png'],
+  },
 };
 
 export const revalidate = 0;

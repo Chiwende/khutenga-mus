@@ -4,7 +4,6 @@ import useGetSongById from '@/hooks/useGetSongById';
 import useLoadSong from '@/hooks/useLoadSongUrl';
 import usePlayer from '@/hooks/usePlayerHook';
 import PlayerContent from './player-content';
-import useLoadImage from '@/hooks/useLoadImage';
 
 const Player = () => {
   const player = usePlayer();
