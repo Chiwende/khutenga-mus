@@ -1,1 +1,4 @@
 J!D-Jihyf2?qher
+
+Stripe Commands 
+stripe listen --forward-to localhost:3000/api/webhook

@@ -1,4 +1,4 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -10,11 +10,29 @@ export async function POST(request: Request) {
   const { price, quantity = 1, metadata = {} } = await request.json();
 
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value;
+          },
+          set(name: string, value: string, options: any) {
+            cookieStore.set({ name, value, ...options });
+          },
+          remove(name: string, options: any) {
+            cookieStore.set({ name, value: '', ...options });
+          },
+        },
+      }
+    );
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
+      console.log('No user');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -35,7 +53,15 @@ export async function POST(request: Request) {
       cancel_url: `${getURL()}`,
       metadata,
     });
-    return NextResponse.json({ sessionId: session.id });
+
+    if (!session.url) {
+      return NextResponse.json(
+        { error: 'Failed to create checkout session' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ url: session.url });
   } catch (error) {
     console.log(error);
     return new NextResponse('Internal Server Error', { status: 500 });
