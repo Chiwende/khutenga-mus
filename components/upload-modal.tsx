@@ -30,6 +30,7 @@ const UploadModal = () => {
       author: '',
       song: null,
       imageUrl: '',
+      genre: '',
     },
   });
 
@@ -83,6 +84,7 @@ const UploadModal = () => {
           author: values.author,
           image_path: imageData?.path,
           song_path: songData?.path,
+          genre: values.genre,
         });
 
       if (supabaseError) {
@@ -122,6 +124,12 @@ const UploadModal = () => {
           disabled={isLoading}
           {...register('author', { required: true })}
           placeholder='Author'
+        />
+        <Input
+          id='genre'
+          disabled={isLoading}
+          {...register('genre', { required: true })}
+          placeholder='Genre'
         />
         <div>
           <div className='pb-1'>Select a song file</div>

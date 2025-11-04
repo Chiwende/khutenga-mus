@@ -51,6 +51,10 @@ export async function POST(request: Request) {
         case 'customer.subscription.updated':
         case 'customer.subscription.deleted':
           const subscription = event.data.object as Stripe.Subscription;
+          console.log(
+            '🚀 ~ file: route.ts ~ line 30 ~ subscription',
+            subscription
+          );
           await manageSubscriptionStatusChange(
             subscription.id,
             subscription.customer as string,
@@ -64,7 +68,8 @@ export async function POST(request: Request) {
             await manageSubscriptionStatusChange(
               subscriptionId as string,
               checkoutSession.customer as string,
-              true
+              true,
+              checkoutSession.metadata?.supabaseUUID as string | undefined
             );
           }
           break;

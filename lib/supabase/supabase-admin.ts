@@ -118,26 +118,52 @@ const copyBillingDetailsToCustomer = async (
 const manageSubscriptionStatusChange = async (
   subscriptionId: string,
   customerId: string,
-  createAction = false
+  createAction = false,
+  supabaseUUIDFromEvent?: string
 ) => {
-  const { data: customerData, error: customerLookupError } = await supabaseAdmin
-    .from('customers')
-    .select('id')
-    .eq('stripe_customer_id', customerId)
-    .single();
+  // Try to find an existing mapping from Stripe customer to Supabase user
+  const { data: initialCustomerData, error: customerLookupError } =
+    await supabaseAdmin
+      .from('customers')
+      .select('id')
+      .eq('stripe_customer_id', customerId)
+      .maybeSingle();
 
-  if (customerLookupError || !customerData) {
-    throw (
-      customerLookupError ?? new Error('Customer not found for subscription')
-    );
+  let customerData = initialCustomerData as { id: string } | null;
+
+  // If not found, attempt to recover by reading metadata from event or Stripe and creating the mapping
+  if (!customerData) {
+    const supabaseUUID =
+      supabaseUUIDFromEvent ||
+      ((await stripe.customers.retrieve(customerId)) as Stripe.Customer)
+        .metadata?.supabaseUUID;
+
+    if (!supabaseUUID) {
+      throw (
+        customerLookupError ??
+        new Error(
+          'Customer not found and no supabaseUUID metadata on Stripe customer'
+        )
+      );
+    }
+
+    const { error: insertMappingError } = await supabaseAdmin
+      .from('customers')
+      .insert([{ id: supabaseUUID, stripe_customer_id: customerId }]);
+
+    if (insertMappingError) throw insertMappingError;
+
+    customerData = { id: supabaseUUID } as { id: string };
+  } else if (customerLookupError) {
+    throw customerLookupError;
   }
 
-  const { id: uuid } = customerData;
+  const { id: uuid } = customerData as { id: string };
 
   const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
     expand: ['default_payment_method'],
   });
-
+  console.log('Supabase Admin Subscription', subscription);
   const subscriptionData: Database['public']['Tables']['subscriptions']['Insert'] =
     {
       id: subscription.id,

@@ -1,33 +1,17 @@
-import { createServerClient } from '@supabase/ssr';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 import { stripe } from '@/lib/stripe/stripe';
 import { getURL } from '@/lib/stripe/helpers';
 import { createOrRetrieveCustomer } from '@/lib/supabase/supabase-admin';
+import type { Database } from '@/lib/db/supabase';
 
 export async function POST(request: Request) {
   const { price, quantity = 1, metadata = {} } = await request.json();
 
   try {
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: any) {
-            cookieStore.set({ name, value, ...options });
-          },
-          remove(name: string, options: any) {
-            cookieStore.set({ name, value: '', ...options });
-          },
-        },
-      }
-    );
+    const supabase = createRouteHandlerClient<Database>({ cookies });
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -46,12 +30,19 @@ export async function POST(request: Request) {
       line_items: [{ price: price.id, quantity }],
       mode: 'subscription',
       allow_promotion_codes: true,
+      client_reference_id: user.id,
       subscription_data: {
-        metadata,
+        metadata: {
+          ...metadata,
+          supabaseUUID: user.id,
+        },
       },
       success_url: `${getURL()}/account`,
       cancel_url: `${getURL()}`,
-      metadata,
+      metadata: {
+        ...metadata,
+        supabaseUUID: user.id,
+      },
     });
 
     if (!session.url) {

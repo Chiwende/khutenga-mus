@@ -7,12 +7,14 @@ import { useState } from 'react';
 import { useUser } from '@/hooks/useUser';
 import toast from 'react-hot-toast';
 import { postData } from '@/lib/stripe/helpers';
+import useSubscriptionModal from '@/hooks/useSubscribeModal';
 
 interface SubscribeModalProps {
   products: ProductWithPrice[];
 }
 
 const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
+  const subscribeModal = useSubscriptionModal();
   let content = <div className='text-center'>No Content Available</div>;
   const { user, isLoading, subscription } = useUser();
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
@@ -25,6 +27,10 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
     }).format((price?.unit_amount || 0) / 100);
 
     return priceString;
+  };
+
+  const onChange = (open: boolean) => {
+    if (!open) subscribeModal.onClose();
   };
 
   const handleSubscribe = async (price: Price) => {
@@ -94,7 +100,7 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
       title='Only for premium users'
       description='Listen to music with Khutenga Premium.'
       isOpen
-      onChange={() => {}}
+      onChange={onChange}
     >
       {content}
     </Modal>

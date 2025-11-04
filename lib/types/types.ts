@@ -59,6 +59,7 @@ export interface Song {
   title: string;
   image_path: string;
   song_path: string;
+  genre: string;
 }
 
 export interface ProductWithPrice extends Product {
