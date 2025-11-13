@@ -98,9 +98,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
         />
         <div
           onClick={handlePlay}
-          className='flex items-center justify-center h-10 w-10 rounded-full bg-white p-1 cursor-pointer'
+          className='flex items-center justify-center h-10 w-10 rounded-full bg-red-500 p-1 cursor-pointer'
         >
-          <Icon size={30} className='text-black' />
+          <Icon size={30} className='text-white' />
         </div>
         <AiFillStepForward
           onClick={onPlayNext}
