@@ -7,7 +7,8 @@ const getSongs = async (): Promise<Song[]> => {
   const { data, error } = await supabase
     .from('songs')
     .select('*')
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .limit(8);
 
   if (error) {
     console.log(error);

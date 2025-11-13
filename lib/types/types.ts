@@ -58,6 +58,7 @@ export interface Song {
   author: string;
   title: string;
   image_path: string;
+  album: string;
   song_path: string;
   genre: string;
 }
