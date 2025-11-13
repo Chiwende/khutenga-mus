@@ -86,6 +86,7 @@ const UploadModal = () => {
           image_path: imageData?.path,
           song_path: songData?.path,
           genre: values.genre,
+          album: values.album,
         });
 
       if (supabaseError) {
@@ -125,6 +126,12 @@ const UploadModal = () => {
           disabled={isLoading}
           {...register('author', { required: true })}
           placeholder='Author'
+        />
+        <Input
+          id='album'
+          disabled={isLoading}
+          {...register('album', { required: true })}
+          placeholder='Album'
         />
         <Input
           id='genre'
