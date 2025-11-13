@@ -3,7 +3,12 @@
 import Modal from '../modal';
 import useUploadModal from '@/hooks/useUploadModal';
 import { useState } from 'react';
-import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
+import {
+  useForm,
+  FieldValues,
+  SubmitHandler,
+  Controller,
+} from 'react-hook-form';
 import Input from '../input';
 import { Button } from '../button';
 import { toast } from 'react-hot-toast';
@@ -11,6 +16,8 @@ import { useUser } from '@/hooks/useUser';
 import uniqid from 'uniqid';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/navigation';
+import { SelectField } from '../select-field';
+import { genreOptions } from '@/lib/constants/genre';
 
 const UploadModal = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,6 +29,7 @@ const UploadModal = () => {
   const {
     register,
     handleSubmit,
+    control,
     reset,
     formState: { errors },
   } = useForm<FieldValues>({
@@ -133,11 +141,18 @@ const UploadModal = () => {
           {...register('album', { required: true })}
           placeholder='Album'
         />
-        <Input
-          id='genre'
-          disabled={isLoading}
-          {...register('genre', { required: true })}
-          placeholder='Genre'
+        <Controller
+          name='genre'
+          control={control}
+          render={({ field }) => (
+            <SelectField
+              label='Genre'
+              placeholder='Select a genre...'
+              options={genreOptions}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
         />
         <div>
           <div className='pb-1'>Select a song file</div>
@@ -167,7 +182,7 @@ const UploadModal = () => {
             <p className='text-red-500'>{errors.song.message as string}</p>
           )}
         </div>
-        <Button disabled={isLoading} type='submit'>
+        <Button disabled={isLoading} type='submit' className='bg-red-500'>
           Create
         </Button>
       </form>

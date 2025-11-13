@@ -22,11 +22,6 @@ export const metadata: Metadata = {
   },
   description: 'Listen to music',
   applicationName: 'Khutenga Music',
-  icons: {
-    icon: [{ url: '/Kmusic.png', type: 'image/png' }],
-    apple: [{ url: '/Kmusic.png' }],
-    shortcut: ['/Kmusic.png'],
-  },
 };
 
 export const revalidate = 0;
