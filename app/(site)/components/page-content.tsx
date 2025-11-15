@@ -2,13 +2,20 @@
 
 import SongItem from '@/components/song-item';
 import useOnPlay from '@/hooks/useOnPlay';
+import { allowedStatus } from '@/lib/constants/allowed-status';
 import { Song } from '@/lib/types/types';
+import { usePathname } from 'next/navigation';
 
 interface PageContentProps {
   songs: Song[];
 }
 
 const PageContent: React.FC<PageContentProps> = ({ songs }) => {
+  const pathname = usePathname();
+  console.log('pathname', pathname);
+  const showStatus = allowedStatus.includes(pathname);
+  console.log('showStatus', showStatus);
+
   const onPlay = useOnPlay(songs);
   if (!songs.length) {
     return <div className='mt-4 text-neutral-400'>No songs found</div>;
@@ -21,6 +28,7 @@ const PageContent: React.FC<PageContentProps> = ({ songs }) => {
           key={song.id}
           onClick={(id) => onPlay(id.toString())}
           data={song}
+          status={showStatus ? song.status : undefined}
         />
       ))}
     </div>

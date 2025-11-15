@@ -144,15 +144,27 @@ const SongsTable: React.FC<SongsTableProps> = ({ songs }) => {
                     >
                       {song.album}
                     </td>
-                    <td
-                      className={classNames(
-                        songIdx !== songs.length - 1
-                          ? 'border-b border-white/10'
-                          : '',
-                        'px-3 py-4 text-sm whitespace-nowrap text-gray-400'
-                      )}
-                    >
-                      {song.status}
+                    <td className='py-4 pr-4 pl-0 text-sm/6 sm:pr-8 lg:pr-20'>
+                      <div className='flex items-center justify-end gap-x-2 sm:justify-start'>
+                        {song.status === 'approved' ? (
+                          <div className='flex-none rounded-full bg-green-400/10 p-1 text-green-400'>
+                            <div className='size-1.5 rounded-full bg-current' />
+                          </div>
+                        ) : null}
+                        {song.status === 'rejected' ? (
+                          <div className='flex-none rounded-full bg-rose-400/10 p-1 text-rose-400'>
+                            <div className='size-1.5 rounded-full bg-current' />
+                          </div>
+                        ) : null}
+                        {song.status === 'pending' ? (
+                          <div className='flex-none rounded-full bg-rose-400/10 p-1 text-amber-400'>
+                            <div className='size-1.5 rounded-full bg-current' />
+                          </div>
+                        ) : null}
+                        <div className='hidden text-white sm:block capitalize'>
+                          {song.status}
+                        </div>
+                      </div>
                     </td>
                     <td
                       className={classNames(
