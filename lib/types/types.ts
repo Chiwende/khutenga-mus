@@ -52,15 +52,54 @@ export interface Subscription {
   trial_end?: string;
 }
 
+export enum SongStatus {
+  Approved = 'approved',
+  Pending = 'pending',
+  Rejected = 'rejected',
+}
 export interface Song {
   id: number;
   user_id: string;
   author: string;
+  artist_id: string;
   title: string;
   image_path: string;
   album: string;
+  album_id: string;
   song_path: string;
   genre: string;
+  status: SongStatus;
+}
+
+export interface Artist {
+  id: string;
+  name: string;
+  image_path: string;
+}
+
+export interface Album {
+  id: string;
+  artist_id: string;
+  title: string;
+}
+
+export interface Playlist {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface PlaylistSong {
+  id: string;
+  playlist_id: string;
+  song_id: string;
+}
+
+export interface PlayHistory {
+  id: string;
+  song_id: string;
+  user_id: string;
+  played_at: string;
 }
 
 export interface ProductWithPrice extends Product {

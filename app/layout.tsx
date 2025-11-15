@@ -10,6 +10,9 @@ import { SessionFeedProvider } from '@/provider/SessionFeedProvider';
 import getSongsByUserId from '@/actions/getSongsByUserId';
 import Player from '@/components/player';
 import getActiveProductsWithPrices from '@/actions/getActiveProductsWithPrices';
+import '@radix-ui/themes/styles.css';
+
+// +260
 
 const font = Figtree({
   subsets: ['latin'],

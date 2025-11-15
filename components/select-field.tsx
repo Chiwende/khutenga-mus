@@ -72,7 +72,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
                   value={opt.value}
                   disabled={opt.disabled}
                   className={clsx(
-                    'relative flex cursor-pointer select-none items-center rounded px-6 py-1.5 text-sm text-gray-900 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-red-500 data-[highlighted]:text-white dark:text-gray-100'
+                    'relative flex cursor-pointer select-none items-center rounded px-6 py-1.5 text-sm text-gray-900 outline-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-red-500 data-highlighted:text-white dark:text-gray-100'
                   )}
                 >
                   <Select.ItemText>{opt.label}</Select.ItemText>

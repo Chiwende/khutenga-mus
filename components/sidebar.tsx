@@ -9,7 +9,10 @@ import SidebarItem from './sidebar-item';
 import Library from './library';
 import { Song } from '@/lib/types/types';
 import usePlayer from '@/hooks/usePlayerHook';
+import { useUser } from '@/hooks/useUser';
 import { twMerge } from 'tailwind-merge';
+import { GiCash } from 'react-icons/gi';
+import { LuLibrary } from 'react-icons/lu';
 
 interface SidebarProps {
   children: React.ReactNode;
@@ -19,8 +22,22 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ children, songs }) => {
   const pathname = usePathname();
   const player = usePlayer();
-  const routes = useMemo(
-    () => [
+  const { user } = useUser();
+
+  const hasAdminPermission = useMemo(() => {
+    if (!user) return false;
+    const role = user.user_metadata?.role as string | undefined;
+    return role === 'admin' || role === 'administrator';
+  }, [user]);
+
+  const hasArtistPermission = useMemo(() => {
+    if (!user) return false;
+    const role = user.user_metadata?.role as string | undefined;
+    return role === 'artist' || role === 'admin' || role === 'administrator';
+  }, [user]);
+
+  const routes = useMemo(() => {
+    const baseRoutes = [
       {
         label: 'Home',
         active: pathname !== '/search',
@@ -33,9 +50,44 @@ const Sidebar: React.FC<SidebarProps> = ({ children, songs }) => {
         href: '/search',
         icon: BiSearch,
       },
-    ],
-    [pathname]
-  );
+    ];
+
+    // Conditionally add Dashboard route for artists/admins
+    // if (hasArtistPermission) {
+    baseRoutes.push(
+      {
+        label: 'Dashboard',
+        active: pathname === '/dashboard',
+        href: '/dashboard',
+        icon: HiHome,
+      },
+      {
+        label: 'Library',
+        active: pathname === '/library',
+        href: '/library',
+        icon: LuLibrary,
+      },
+      {
+        label: 'Earnings',
+        active: pathname === '/earnings',
+        href: '/earnings',
+        icon: GiCash,
+      }
+    );
+    // }
+
+    // Conditionally add Admin route for admins only
+    if (hasAdminPermission) {
+      baseRoutes.push({
+        label: 'Admin',
+        active: pathname === '/admin',
+        href: '/admin',
+        icon: HiHome,
+      });
+    }
+
+    return baseRoutes;
+  }, [pathname, hasAdminPermission, hasArtistPermission]);
 
   return (
     <div

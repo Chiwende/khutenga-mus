@@ -4,7 +4,6 @@ import { BiSearch } from 'react-icons/bi';
 import { HiHome } from 'react-icons/hi';
 import { RxCaretLeft, RxCaretRight } from 'react-icons/rx';
 import { twMerge } from 'tailwind-merge';
-import { Button } from './button';
 import useAuthModal from '@/hooks/useAuthModal';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useUser } from '@/hooks/useUser';
@@ -33,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
   const { user } = useUser();
   return (
     <div
-      className={twMerge('h-fit bg-gradient-to-b from-red-500 p-6', className)}
+      className={twMerge('h-fit bg-linear-to-b from-red-500 p-6', className)}
     >
       <div className='w-full mb-4 flex items-center justify-between'>
         <div className='hidden md:flex gap-x-2 items-center'>
@@ -51,43 +50,47 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
           </button>
         </div>
         {user ? (
-          <div className='flex gap-x-4 items-center max-w-lg'>
-            <Button
-              className='bg-white px-6 py-2 flex-1'
-              onClick={handleLogout}
-            >
-              Log Out
-            </Button>
-            <Button
-              onClick={() => router.push('/account')}
-              className='flex-1 bg-white'
-            >
-              <FaUserAlt />
-            </Button>
+          <div className='ml-auto flex gap-x-4 items-center'>
+            <div>
+              <button
+                className='bg-white  text-black font-bold py-2 px-4 rounded cursor-pointer'
+                onClick={handleLogout}
+              >
+                Log Out
+              </button>
+            </div>
+            <div>
+              <button
+                className='bg-white  text-black font-bold py-4 px-4 rounded-full cursor-pointer'
+                onClick={() => router.push('/account')}
+              >
+                <FaUserAlt />
+              </button>
+            </div>
           </div>
         ) : (
           <>
-            <div className='flex md:hidden gap-x-2 items-center w-full'>
+            <div className='ml-auto flex items-center gap-x-4'>
               <button className='rounded-full bg-white p-2 flex items-center justify-center hover:opacity-75 transition'>
                 <HiHome size={20} className='text-black' />
               </button>
               <button className='rounded-full bg-white p-2 flex items-center justify-center hover:opacity-75 transition'>
                 <BiSearch size={20} className='text-black' />
               </button>
-            </div>
-            <div className='flex items-center gap-x-4 w-full'>
-              <Button
+
+              {/* Sign Up + Login */}
+              <button
                 onClick={authModal.onOpen}
-                className='bg-transparent text-neutral-500 font-medium px-6 py-3 flex-1'
+                className='bg-transparent text-neutral-500 font-bold py-2 px-4 rounded cursor-pointer'
               >
                 Sign Up
-              </Button>
-              <Button
+              </button>
+              <button
                 onClick={authModal.onOpen}
-                className='bg-white text-neutral-500 font-medium px-6 py-3 flex-1'
+                className='bg-white text-neutral-600 font-bold py-2 px-4 rounded cursor-pointer'
               >
                 Login
-              </Button>
+              </button>
             </div>
           </>
         )}
